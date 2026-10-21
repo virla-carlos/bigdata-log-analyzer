@@ -3,17 +3,18 @@ from main import alert_events
 
 bgl = pd.read_csv("./data/raw/BGL_2k.log_structured.csv")
 
-# bgl.info()
-
 def functionAlertTest():
     alert = bgl.loc[
         (bgl["Label"] != "-") & (bgl["EventId"] == "E55"), 
-        ["EventId", "Content", "LineId", "Level"]
+        ["EventId", "Level", "Content"]
     ]
 
-    alert.drop_duplicates()
+    alert = alert.groupby([
+        "EventId",
+        "Level",
+        "Content"
+    ]).size()
 
-    
     print(alert)
 
 functionAlertTest()
