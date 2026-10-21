@@ -349,7 +349,7 @@ O ambiente virtual e o dataset devem ser preparados localmente em cada máquina.
 ## 1. Clone o repositório
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/virla-carlos/bigdata-log-analyzer
 cd bigdata-log-analyzer
 ```
 
