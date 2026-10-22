@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 
+import matplotlib.pyplot as plt
+
 from main import generate_analysis
+from charts import show_occurrences_chart
 
 root = tk.Tk()
 
@@ -64,5 +67,17 @@ table.pack(
     padx=20,
     pady=20
 )
+
+def show_chart():
+    ranking = generate_analysis()
+    show_occurrences_chart(ranking)
+
+chart_button = tk.Button(
+    root,
+    text="Ver gráfico",
+    command=show_chart
+)
+
+chart_button.pack(pady=10)
 
 root.mainloop()
