@@ -1,318 +1,195 @@
-<div align="center">
+# Big Data Log Analyzer
 
-# 📊 Big Data Log Analyzer
+Aplicação desenvolvida em **Python** para análise de grandes volumes de logs, identificação de padrões recorrentes de alertas e classificação de prioridade com base na frequência das ocorrências.
 
-### Análise e priorização de padrões recorrentes em grandes volumes de logs
-
-Projeto desenvolvido em **Python** para transformar registros de logs em informações úteis para equipes de suporte, facilitando a identificação de alertas recorrentes e a priorização de incidentes.
-
-![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?logo=pandas)
-![NumPy](https://img.shields.io/badge/NumPy-Numerical%20Analysis-013243?logo=numpy)
-![Matplotlib](https://img.shields.io/badge/Matplotlib-Visualization-orange)
-![Status](https://img.shields.io/badge/status-v0.1%20em%20desenvolvimento-yellow)
-
-</div>
-
----
-
-## 📌 Sobre o projeto
-
-Aplicações podem gerar milhares ou milhões de registros de log durante sua execução.
-
-Para uma equipe de suporte, analisar manualmente esse volume de informações pode dificultar a identificação de falhas recorrentes, atrasar a investigação de incidentes e tornar mais demorado o encaminhamento de informações para desenvolvedores e usuários.
-
-O **Big Data Log Analyzer** busca transformar esses registros em informações mais fáceis de interpretar.
-
-A aplicação analisa os logs, identifica registros classificados como alerta, agrupa eventos semelhantes, calcula sua recorrência e atribui uma prioridade de análise.
-
-### Fluxo simplificado
-
-```text
-Milhares de registros de log
-            ↓
-Identificação dos alertas
-            ↓
-Agrupamento por padrão
-            ↓
-Cálculo da recorrência
-            ↓
-Classificação de prioridade
-            ↓
-Ranking de alertas
-            ↓
-Visualizações e apoio à análise
-```
-
-> O objetivo da aplicação não é corrigir automaticamente falhas nem substituir a análise realizada pelas equipes de suporte e desenvolvimento.
+O projeto foi desenvolvido como parte da disciplina de **Tópicos de Big Data em Python**.
 
 ---
 
 ## 🎯 Objetivo
 
-Desenvolver uma solução capaz de processar grandes volumes de logs e facilitar a identificação de padrões recorrentes de alerta.
+Em aplicações que geram grandes volumes de logs, a análise manual pode dificultar a identificação dos erros mais recorrentes e tornar a investigação de incidentes mais demorada.
 
-A aplicação deverá permitir que a equipe de suporte consiga identificar:
+O **Big Data Log Analyzer** busca auxiliar principalmente equipes de suporte na análise inicial desses registros, permitindo:
 
-- quais alertas estão ocorrendo;
-- quais padrões aparecem com maior frequência;
-- quantas vezes cada padrão ocorreu;
-- qual o nível de severidade associado;
-- quais alertas devem receber maior atenção;
-- quais informações podem auxiliar na investigação do incidente.
+- identificar registros classificados como alerta;
+- agrupar padrões de erro semelhantes;
+- calcular a quantidade de ocorrências;
+- classificar os padrões por prioridade;
+- gerar um ranking dos alertas encontrados;
+- apresentar os resultados por meio de interface gráfica;
+- visualizar os dados através de gráficos.
 
----
-
-## 👥 Público-alvo
-
-### Principal
-
-**Equipe de suporte técnico**, responsável pela análise inicial de incidentes.
-
-### Secundário
-
-**Equipe de desenvolvimento**, que poderá utilizar os padrões encontrados como apoio durante investigações técnicas.
+A aplicação **não tem como objetivo diagnosticar automaticamente a causa raiz nem corrigir erros do sistema**.
 
 ---
 
-# 🗃️ Dataset
+## 🖥️ Funcionalidades atuais
 
-O dataset escolhido para o projeto foi o **BGL (Blue Gene/L)**, disponibilizado pelo projeto [LogHub](https://github.com/logpai/loghub).
+A versão atual da aplicação permite:
 
-O conjunto contém registros coletados de um supercomputador Blue Gene/L e é utilizado em pesquisas relacionadas à análise de logs, detecção de anomalias e falhas.
-
-### Dataset completo
-
-| Característica | Valor |
-|---|---:|
-| Registros | **4.747.963** |
-| Tamanho bruto | **~708,76 MiB** |
-| Período aproximado | **214,7 dias** |
-| Formato | Log bruto |
-| Possui classificação de alertas | ✅ |
-
-No BGL:
-
-```text
-Label = "-"  → registro não classificado como alerta
-
-Label != "-" → registro classificado como alerta
-```
+- ✅ Leitura do dataset estruturado BGL;
+- ✅ Processamento dos dados com Pandas;
+- ✅ Separação entre eventos normais e alertas;
+- ✅ Agrupamento dos alertas por padrão;
+- ✅ Contagem da recorrência dos padrões;
+- ✅ Classificação em níveis de prioridade;
+- ✅ Ordenação dos alertas por quantidade de ocorrências;
+- ✅ Exibição do ranking em uma interface desenvolvida com Tkinter;
+- ✅ Gráfico dos alertas mais recorrentes;
+- ✅ Gráfico da distribuição dos padrões por prioridade.
 
 ---
 
-## 🧪 Dataset utilizado na v0.1
+## 📊 Dataset
 
-Durante o desenvolvimento inicial está sendo utilizada a amostra:
+O projeto utiliza o **BGL (Blue Gene/L)**, disponibilizado pelo LogHub.
+
+O dataset completo possui aproximadamente:
+
+- **4,7 milhões de registros**
+- cerca de **708 MiB**
+- registros provenientes de um sistema de supercomputação
+
+Durante o desenvolvimento inicial da aplicação foi utilizado o arquivo:
 
 ```text
 BGL_2k.log_structured.csv
 ```
 
-Ela contém:
+Essa versão contém **2.000 registros estruturados**, permitindo desenvolver e validar inicialmente o fluxo de processamento antes da aplicação sobre volumes maiores.
 
-| Informação | Quantidade |
-|---|---:|
-| Registros | **2.000** |
-| Colunas | **13** |
-| Registros normais | **1.857** |
-| Alertas | **143** |
+### Principais campos utilizados
 
-A utilização da amostra permite desenvolver e validar a lógica da aplicação antes de realizar os testes com os **4,7 milhões de registros** do dataset completo.
+| Campo | Descrição |
+|---|---|
+| `Label` | Classificação do registro. `-` representa um evento normal e outros valores representam categorias de alerta. |
+| `EventId` | Identificador associado a um padrão de log. |
+| `EventTemplate` | Estrutura generalizada da mensagem de log. |
+| `Level` | Nível de severidade do registro. |
+| `Content` | Mensagem original do log. |
+| `Node` | Nó ou máquina onde o evento ocorreu. |
 
-> Os datasets não são versionados no repositório. Os arquivos devem ser adicionados localmente em `data/raw/`.
+> **Importante:** o `EventId` não representa necessariamente um código de erro. Ele funciona como um identificador associado a determinado padrão de mensagem.
 
 ---
 
-# 🔎 Estrutura dos dados
+## 🔎 EventTemplate
 
-Alguns dos principais campos utilizados durante a análise são:
+Logs podem possuir mensagens semelhantes, mas conter valores variáveis, como identificadores, endereços, portas ou caminhos.
 
-| Campo | Função |
-|---|---|
-| `Label` | Identifica se o registro foi classificado como alerta |
-| `Timestamp` | Momento do evento |
-| `Date` | Data do registro |
-| `Node` | Nó onde o evento ocorreu |
-| `Component` | Componente responsável pela mensagem |
-| `Level` | Severidade do evento |
-| `Content` | Mensagem original registrada |
-| `EventId` | Identificador do padrão do evento |
-| `EventTemplate` | Representação genérica da mensagem |
-
-### Exemplo
-
-Diferentes mensagens podem representar o mesmo tipo de evento:
+Por exemplo:
 
 ```text
-socket to 172.16.96.116:33399
-socket to 172.16.96.116:33569
-socket to 172.16.96.116:33231
+socket to 10.0.0.1:5000
+socket to 10.0.0.2:6000
 ```
 
-Essas ocorrências podem ser representadas por um padrão:
+Um parser pode transformar essas mensagens em um padrão semelhante a:
 
 ```text
 socket to <*>
 ```
 
-Dessa forma, a aplicação consegue analisar a **recorrência do padrão**, mesmo quando partes da mensagem variam.
+Esse padrão é representado pelo campo `EventTemplate`.
+
+Na versão atual do projeto, o dataset estruturado utilizado **já fornece `EventId` e `EventTemplate` previamente processados**.
+
+A geração desses padrões diretamente a partir do arquivo bruto do BGL poderá ser incorporada em versões futuras.
 
 ---
 
-# ⚙️ Fluxo de processamento
+## 🔄 Fluxo da aplicação
 
 ```text
-BGL
- │
- ▼
-Leitura dos registros
- │
- ▼
-Estruturação com Pandas
- │
- ▼
-Identificação de alertas
- │
- ▼
-Agrupamento por EventId
- │
- ▼
-EventTemplate + Level
- │
- ▼
-Contagem de ocorrências
- │
- ▼
-Análise da distribuição
- │
- ▼
-Classificação de prioridade
- │
- ▼
-Ranking dos alertas
- │
- ▼
-Visualizações
+Dataset BGL
+    ↓
+Leitura com Pandas
+    ↓
+Filtragem dos registros de alerta
+    ↓
+Agrupamento por padrão
+    ↓
+Contagem das ocorrências
+    ↓
+Cálculo da prioridade
+    ↓
+Ordenação do ranking
+    ↓
+Interface Tkinter
+    ↓
+Tabela + gráficos Matplotlib
 ```
 
 ---
 
-# 🚨 Priorização dos alertas
+## 🚨 Classificação de prioridade
 
-Os alertas são agrupados considerando:
+A prioridade atual é definida utilizando a distribuição da quantidade de ocorrências dos padrões.
 
-```text
-EventId
-+
-Level
-+
-EventTemplate
-```
-
-A quantidade de registros pertencentes ao mesmo padrão é armazenada na coluna:
+São calculados:
 
 ```text
-Occurrences
-```
-
-Na versão atual, a distribuição dessas ocorrências é utilizada para definir os limites de prioridade.
-
-São utilizados:
-
-```text
-Q50 → mediana
+Q50 → mediana das ocorrências
 Q75 → terceiro quartil
 ```
 
-A classificação inicial funciona da seguinte forma:
+A classificação segue a regra:
 
 ```text
-Occurrences <= Q50
-        ↓
-   RISCO BAIXO
+Ocorrências <= Q50
+→ RISCO BAIXO
 
+Ocorrências > Q50 e <= Q75
+→ RISCO MÉDIO
 
-Q50 < Occurrences <= Q75
-        ↓
-   RISCO MÉDIO
-
-
-Occurrences > Q75
-        ↓
-    RISCO ALTO
+Ocorrências > Q75
+→ RISCO ALTO
 ```
 
-Na amostra utilizada atualmente:
+No conjunto atual de alertas analisados, todos os registros possuem nível `FATAL`.
+
+Por isso, nesta versão, a classificação consegue diferenciar os padrões principalmente pela **recorrência**.
+
+Em uma evolução futura, datasets com diferentes níveis de severidade poderão permitir combinar:
 
 ```text
-Q50 = 3.5
-Q75 = 8.25
+recorrência + severidade
 ```
 
-Exemplo:
-
-| EventId | Level | Ocorrências | Prioridade |
-|---|---|---:|---|
-| `E55` | FATAL | 59 | 🔴 Risco Alto |
-| `E52` | FATAL | 30 | 🔴 Risco Alto |
-| `E29` | FATAL | 9 | 🔴 Risco Alto |
-| `E32` | FATAL | 8 | 🟡 Risco Médio |
-| `E30` | FATAL | 4 | 🟡 Risco Médio |
-| `E33` | FATAL | 3 | 🟢 Risco Baixo |
-
-> Na amostra `BGL_2k`, todos os registros classificados como alerta possuem `Level = FATAL`. Por isso, na v0.1 a recorrência é o principal fator de diferenciação da prioridade.
-
-A estratégia deverá evoluir quando forem utilizados dados com diferentes níveis de severidade.
+na definição da prioridade.
 
 ---
 
-# 🧰 Tecnologias
+## 📈 Visualizações
 
-### Core
+A aplicação atualmente possui duas visualizações utilizando **Matplotlib**.
 
-| Tecnologia | Utilização |
-|---|---|
-| 🐍 **Python** | Linguagem principal |
-| 🐼 **Pandas** | Estruturação, filtragem, agrupamento e análise dos logs |
-| 🔢 **NumPy** | Operações numéricas e estatísticas |
-| 📊 **Matplotlib** | Visualização dos resultados |
+### Alertas mais recorrentes
 
-### Tecnologias em avaliação
+Gráfico de barras horizontal comparando:
 
-- **SQL** — persistência dos resultados processados;
-- **Parser de logs** — processamento do BGL bruto e geração de padrões;
-- **FastAPI** — possível disponibilização dos resultados através de API;
-- **Machine Learning** — análises futuras de similaridade ou comportamento anômalo.
+```text
+EventId × Quantidade de ocorrências
+```
 
-Essas tecnologias não são requisitos obrigatórios para a primeira versão.
+Esse gráfico permite identificar rapidamente quais padrões aparecem com maior frequência.
 
----
+### Distribuição por prioridade
 
-# 🚀 Status da v0.1
+Gráfico que apresenta a quantidade de padrões classificados como:
 
-### Implementado
+```text
+RISCO BAIXO
+RISCO MÉDIO
+RISCO ALTO
+```
 
-- [x] Leitura do `BGL_2k.log_structured.csv`
-- [x] Validação da estrutura do dataset
-- [x] Análise inicial com Pandas
-- [x] Identificação dos registros classificados como alerta
-- [x] Separação entre registros normais e alertas
-- [x] Agrupamento de alertas por padrão
-- [x] Contagem da recorrência
-- [x] Análise da distribuição das ocorrências
-- [x] Classificação inicial de prioridade
-
-### Em desenvolvimento
-
-- [ ] Ordenação e apresentação do ranking final
-- [ ] Criação das primeiras visualizações
-- [ ] Testes do fluxo completo
-- [ ] Finalização da documentação da v0.1
+Ele permite visualizar como os padrões encontrados estão distribuídos entre os níveis de prioridade.
 
 ---
 
-# 📁 Estrutura do projeto
+## 🏗️ Estrutura do projeto
 
 ```text
 bigdata-log-analyzer/
@@ -324,80 +201,130 @@ bigdata-log-analyzer/
 ├── outputs/
 │
 ├── src/
-│   └── main.py
+│   ├── main.py
+│   ├── app.py
+│   └── charts.py
 │
 ├── .gitignore
 ├── README.md
 └── requirements.txt
 ```
 
-### Diretórios locais
+### Responsabilidade dos arquivos
 
-Os seguintes conteúdos não são enviados para o GitHub:
+**`main.py`**
 
-```text
-.venv/
-data/raw/*
-```
+Responsável pelo processamento e análise dos dados:
 
-O ambiente virtual e o dataset devem ser preparados localmente em cada máquina.
+- leitura do dataset;
+- filtragem dos alertas;
+- agrupamento;
+- cálculo das ocorrências;
+- classificação de prioridade;
+- geração do ranking.
+
+**`app.py`**
+
+Responsável pela interface gráfica desenvolvida com **Tkinter**.
+
+A interface permite:
+
+- iniciar a análise;
+- visualizar o ranking;
+- acessar as visualizações gráficas.
+
+**`charts.py`**
+
+Responsável pelas visualizações desenvolvidas com **Matplotlib**.
 
 ---
 
-# ▶️ Executando o projeto
+## 🛠️ Tecnologias utilizadas
 
-## 1. Clone o repositório
+### Principais
+
+- Python
+- Pandas
+- Matplotlib
+- Tkinter
+
+### Tecnologias previstas para evolução
+
+- NumPy
+- SQL
+- técnicas de Inteligência Artificial / Machine Learning
+
+---
+
+## 🚀 Como executar
+
+### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/virla-carlos/bigdata-log-analyzer
+git clone https://github.com/virla-carlos/bigdata-log-analyzer.git
+```
+
+Entre na pasta:
+
+```bash
 cd bigdata-log-analyzer
 ```
 
 ---
 
-## 2. Crie o ambiente virtual
+### 2. Crie um ambiente virtual
+
+No Windows:
 
 ```bash
 python -m venv .venv
 ```
 
-### Windows PowerShell
+---
 
-```powershell
-.\.venv\Scripts\Activate.ps1
+### 3. Ative o ambiente virtual
+
+No Prompt de Comando:
+
+```bash
+.venv\Scripts\activate
 ```
 
-Caso a execução de scripts esteja bloqueada, também é possível utilizar diretamente o Python do ambiente virtual:
-
-```powershell
-.\.venv\Scripts\python.exe --version
-```
+Caso não queira ou não possa ativar o ambiente virtual, também é possível utilizar diretamente o Python existente dentro dele.
 
 ---
 
-## 3. Instale as dependências
+### 4. Instale as dependências
 
 ```bash
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-Ou diretamente pelo ambiente virtual:
+Ou utilizando diretamente o Python do ambiente virtual:
 
-```powershell
+```bash
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 ---
 
-## 4. Adicione o dataset
+### 5. Adicione o dataset
 
-Faça o download da amostra do BGL através do projeto LogHub e coloque:
+Por questões de tamanho e organização, os arquivos do dataset não são versionados no Git.
+
+Adicione:
 
 ```text
 BGL_2k.log_structured.csv
 ```
 
-em:
+dentro de:
+
+```text
+data/raw/
+```
+
+O caminho esperado será:
 
 ```text
 data/raw/BGL_2k.log_structured.csv
@@ -405,85 +332,124 @@ data/raw/BGL_2k.log_structured.csv
 
 ---
 
-## 5. Execute
+### 6. Execute a aplicação
 
-```powershell
-.\.venv\Scripts\python.exe .\src\main.py
+Na raiz do projeto:
+
+```bash
+python src/app.py
+```
+
+Ou utilizando diretamente o ambiente virtual:
+
+```bash
+.\.venv\Scripts\python.exe .\src\app.py
 ```
 
 ---
 
-# 🧭 Roadmap
+## 🖥️ Utilizando a aplicação
 
-### v0.1
+Após iniciar o programa:
+
+1. Clique em **Analisar Logs**;
+2. Aguarde o processamento do dataset;
+3. O ranking dos padrões será exibido na tabela;
+4. Utilize **Ver gráfico** para visualizar a recorrência dos alertas;
+5. Utilize **Ver prioridades** para visualizar a distribuição das prioridades.
+
+---
+
+## 📌 Resultado atual
+
+Nos 2.000 registros utilizados durante o desenvolvimento inicial:
 
 ```text
-Leitura
-  ↓
-Alertas
-  ↓
-Recorrência
-  ↓
-Prioridade
-  ↓
-Ranking
-  ↓
-Visualização
+2.000 registros analisados
+1.857 eventos normais
+143 registros classificados como alerta
 ```
 
-### Próximas etapas
+O padrão mais recorrente identificado no conjunto analisado foi:
 
-- [ ] Finalizar ranking dos padrões de alerta
-- [ ] Criar gráficos com Matplotlib
-- [ ] Melhorar a estratégia de prioridade
-- [ ] Refatorar e separar responsabilidades do código
-- [ ] Criar testes automatizados
-- [ ] Processar o arquivo BGL bruto
-- [ ] Implementar estratégia de parsing
-- [ ] Validar com o dataset completo
-- [ ] Avaliar persistência utilizando SQL
-- [ ] Avaliar API utilizando FastAPI
-- [ ] Investigar possíveis aplicações de Machine Learning
+```text
+EventId: E55
+Ocorrências: 59
+```
 
----
+seguido por:
 
-# 🚫 Fora do escopo atual
+```text
+EventId: E52
+Ocorrências: 30
+```
 
-A primeira versão não pretende:
-
-- corrigir automaticamente falhas;
-- determinar de forma garantida a causa raiz;
-- realizar alterações na aplicação analisada;
-- executar ações automáticas em ambientes externos;
-- monitorar logs continuamente em tempo real;
-- integrar diretamente sistemas corporativos;
-- substituir a análise realizada pelas equipes técnicas.
-
-O projeto funciona como uma **ferramenta de apoio à análise de incidentes**.
+Esses resultados demonstram como o agrupamento facilita a identificação dos padrões que merecem maior atenção durante a investigação de incidentes.
 
 ---
 
-# 🎓 Contexto acadêmico
+## ⚠️ Limitações da versão atual
 
-Projeto desenvolvido para a disciplina de:
+A versão atual ainda possui algumas limitações:
 
-**Tópicos de Big Data em Python**
-
-O objetivo acadêmico é aplicar conceitos relacionados a:
-
-- análise de dados;
-- processamento de grandes volumes de registros;
-- tratamento de dados com Pandas;
-- operações numéricas com NumPy;
-- visualização com Matplotlib;
-- desenvolvimento de uma solução baseada em um problema real.
+- utiliza inicialmente a amostra estruturada BGL de 2.000 registros;
+- `EventId` e `EventTemplate` já vêm processados pelo dataset;
+- todos os alertas da amostra analisada possuem nível `FATAL`;
+- a prioridade atual é baseada principalmente na recorrência;
+- não realiza monitoramento em tempo real;
+- não realiza diagnóstico automático de causa raiz;
+- não executa correções no sistema analisado.
 
 ---
 
-<div align="center">
+## 🗺️ Próximas etapas
 
-### Big Data Log Analyzer
+Entre as evoluções previstas estão:
 
-**Transformando milhões de registros em informações úteis para análise de incidentes.**
+- processamento do dataset BGL completo;
+- análise dos logs brutos;
+- geração automática de templates de eventos;
+- novas visualizações;
+- análise temporal dos alertas;
+- análise por componentes e nós;
+- utilização mais ampla de NumPy;
+- integração com banco de dados SQL;
+- exploração de técnicas de Inteligência Artificial;
+- evolução da regra de prioridade utilizando recorrência e severidade;
+- melhorias visuais na interface Tkinter.
 
-</div>
+---
+
+## 📚 Contexto acadêmico
+
+Projeto desenvolvido para a disciplina de **Tópicos de Big Data em Python**, com foco na aplicação prática de técnicas de processamento, análise e visualização de grandes volumes de dados.
+
+O projeto busca também aplicar conceitos próximos a um fluxo real de desenvolvimento de software, incluindo:
+
+- definição de problema;
+- Discovery;
+- planejamento;
+- versionamento com Git;
+- organização por responsabilidades;
+- desenvolvimento incremental;
+- testes;
+- documentação.
+
+---
+
+## 📄 Versão atual
+
+```text
+v0.1
+```
+
+A primeira versão funcional contém o fluxo completo entre:
+
+```text
+Dataset
+→ Processamento
+→ Análise
+→ Priorização
+→ Interface
+→ Visualização
+```
