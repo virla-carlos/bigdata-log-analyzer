@@ -1,8 +1,5 @@
 import pandas as pd
 
-#? Exibe todas as linhas de um dataframe
-# pd.set_option("display.max_rows", None)
-
 bgl = pd.read_csv("./data/raw/BGL_2k.log_structured.csv")  
 
 
@@ -38,8 +35,6 @@ def alert_events():
     
     return alert
 
-alert_data = alert_events()
-
 def calc_limit(alert_data):
 
     q50 = alert_data["Occurrences"].quantile(0.50)
@@ -47,7 +42,12 @@ def calc_limit(alert_data):
     
     return q50, q75
 
-q50, q75 = calc_limit(alert_data)
+def apply_priority(alert_data, q50, q75):
+    alert_data["Priority"] = alert_data["Occurrences"].apply(
+        lambda occurrence: define_priority(occurrence, q50, q75)
+    )
+
+    return alert_data
 
 def define_priority(occurrences, q50, q75):
 
@@ -58,13 +58,23 @@ def define_priority(occurrences, q50, q75):
     else:
         return "RISCO ALTO"
 
-def apply_priority(alert_data, q50, q75):
-    alert_data["Priority"] = alert_data["Occurrences"].apply(
-        lambda occurrence: define_priority(occurrence, q50, q75)
+def generate_analysis():
+    alert_data = alert_events()
+
+    q50, q75 = calc_limit(alert_data)
+
+    alert_data = apply_priority(
+        alert_data,
+        q50,
+        q75
     )
+
+    alert_data = alert_data.sort_values(
+        by="Occurrences",
+        ascending=False
+    ).reset_index(drop=True)
 
     return alert_data
 
-alert_data = apply_priority(alert_data, q50, q75)
-
-print(alert_data)
+if __name__ == "__main__":
+    print(generate_analysis())
