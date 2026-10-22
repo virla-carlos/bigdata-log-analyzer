@@ -4,7 +4,7 @@ from tkinter import ttk
 import matplotlib.pyplot as plt
 
 from main import generate_analysis
-from charts import show_occurrences_chart
+from charts import show_occurrences_chart, show_priority_chart
 
 root = tk.Tk()
 
@@ -79,5 +79,17 @@ chart_button = tk.Button(
 )
 
 chart_button.pack(pady=10)
+
+def show_priority():
+    ranking = generate_analysis()
+    show_priority_chart(ranking)
+
+priority_button = tk.Button(
+    root,
+    text="Ver prioridades",
+    command=show_priority
+)
+
+priority_button.pack(pady=10)
 
 root.mainloop()
